@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoFuturo - Aprendizaje Ecológico Interactivo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #00ffcc;
+            --secondary-color: #ff00ff;
+            --tertiary-color: #ffaa00;
+            --dark-bg: #0a0a1a;
+            --card-bg: rgba(20, 20, 40, 0.8);
+            --text-light: #ffffff;
+            --text-dim: #a0a0b0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(0, 255, 204, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 0, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(255, 170, 0, 0.1) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            animation: twinkle 4s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+
+        header {
+            padding: 1rem 2rem;
+            background: linear-gradient(90deg, rgba(10, 10, 26, 0.9), rgba(30, 30, 60, 0.9));
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 255, 204, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 900;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(0, 255, 204, 0.5);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        nav a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transition: width 0.3s;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 3rem 0;
+            margin-bottom: 3rem;
+        }
+
+        .hero h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--tertiary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 10px rgba(0, 255, 204, 0.5); }
+            to { text-shadow: 0 0 20px rgba(255, 0, 255, 0.5), 0 0 30px rgba(255, 170, 0, 0.3); }
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .section {
+            margin-bottom: 3rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s, transform 0.5s;
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            gap: 1rem;
+        }
+
+        .section-icon {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 50%;
+            font-size: 1.5rem;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.5);
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 255, 204, 0.2);
+        }
+
+        .card h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .card p {
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            color: var(--text-dim);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            color: var(--dark-bg);
+            font-weight: 700;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            font-family: 'Orbitron', sans-serif;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(-100%);
+            transition: transform 0.3s;
+            z-index: -1;
+        }
+
+        .btn:hover::before {
+            transform: translateX(0);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 255, 204, 0.3);
+        }
+
+        .activity-container {
+            display: none;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            border: 1px solid rgba(0, 255, 204, 0.3);
+        }
+
+        .activity-container.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .quiz-container {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 3rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            display: none;
+        }
+
+        .quiz-container.active {
+            display: block;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .quiz-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            color: var(--primary-color);
+        }
+
+        .timer {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: var(--tertiary-color);
+        }
+
+        .question-container {
+            margin-bottom: 2rem;
+        }
+
+        .question {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .option {
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .option:hover {
+            background: rgba(0, 255, 204, 0.1);
+            border-color: var(--primary-color);
+        }
+
+        .option.selected {
+            background: rgba(0, 255, 204, 0.2);
+            border-color: var(--primary-color);
+        }
+
+        .option.correct {
+            background: rgba(0, 255, 0, 0.2);
+            border-color: #00ff00;
+        }
+
+        .option.incorrect {
+            background: rgba(255, 0, 0, 0.2);
+            border-color: #ff0000;
+        }
+
+        .quiz-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+
+        .result-container {
+            text-align: center;
+            padding: 2rem;
+            display: none;
+        }
+
+        .result-container.active {
+            display: block;
+        }
+
+        .result-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .result-score {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .drag-drop-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .draggable {
+            padding: 0.8rem;
+            background: rgba(0, 255, 204, 0.2);
+            border: 1px solid var(--primary-color);
+            border-radius: 8px;
+            cursor: move;
+            transition: all 0.3s;
+        }
+
+        .draggable:hover {
+            background: rgba(0, 255, 204, 0.3);
+        }
+
+        .drop-zone {
+            padding: 1rem;
+            min-height: 100px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .drop-zone.active {
+            background: rgba(0, 255, 204, 0.1);
+            border-color: var(--primary-color);
+        }
+
+        .matching-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .matching-column {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .matching-item {
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .matching-item:hover {
+            background: rgba(0, 255, 204, 0.1);
+            border-color: var(--primary-color);
+        }
+
+        .matching-item.selected {
+            background: rgba(0, 255, 204, 0.2);
+            border-color: var(--primary-color);
+        }
+
+        .feedback {
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .feedback.correct {
+            background: rgba(0, 255, 0, 0.2);
+            border: 1px solid #00ff00;
+            display: block;
+        }
+
+        .feedback.incorrect {
+            background: rgba(255, 0, 0, 0.2);
+            border: 1px solid #ff0000;
+            display: block;
+        }
+
+        footer {
+            background: linear-gradient(90deg, rgba(10, 10, 26, 0.9), rgba(30, 30, 60, 0.9));
+            padding: 2rem;
+            text-align: center;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            color: var(--text-light);
+            font-size: 1.5rem;
+            transition: color 0.3s;
+        }
+
+        .social-links a:hover {
+            color: var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .matching-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+
+    <header>
+        <div class="header-content">
+            <div class="logo">EcoFuturo</div>
+            <nav>
+                <ul>
+                    <li><a href="#biosfera">Biosfera</a></li>
+                    <li><a href="#biotopo">Biotopo</a></li>
+                    <li><a href="#comunidad">Comunidad</a></li>
+                    <li><a href="#poblacion">Población</a></li>
+                    <li><a href="#crecimiento">Crecimiento</a></li>
+                    <li><a href="#quiz">Quiz</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>Explora el Mundo Ecológico</h1>
+            <p>Descubre los fascinantes componentes de nuestro planeta a través de actividades interactivas y aprendizaje gamificado</p>
+        </section>
+
+        <section id="biosfera" class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-globe-americas"></i>
+                </div>
+                <h2 class="section-title">Biosfera</h2>
+            </div>
+
+            <div class="card">
+                <h3>¿Qué es la Biosfera?</h3>
+                <p>La biosfera es el conjunto de todos los ecosistemas de la Tierra. Es la capa del planeta donde existe vida, abarcando desde las profundidades oceánicas hasta las altas montañas. Incluye todos los seres vivos y los ambientes donde interactúan.</p>
+                <p>La biosfera se divide en:</p>
+                <ul>
+                    <li>Litosfera (parte sólida de la Tierra)</li>
+                    <li>Hidrosfera (todas las aguas del planeta)</li>
+                    <li>Atmósfera (capa gaseosa que rodea la Tierra)</li>
+                </ul>
+                <button class="btn" onclick="toggleActivity('biosfera-activity')">
+                    <i class="fas fa-play"></i> Actividad Interactiva
+                </button>
+                
+                <div id="biosfera-activity" class="activity-container">
+                    <h4>Actividad: Componentes de la Biosfera</h4>
+                    <p>Arrastra cada componente a su correspondiente capa de la biosfera:</p>
+                    <div class="drag-drop-container">
+                        <div class="draggable" draggable="true">Suelo</div>
+                        <div class="draggable" draggable="true">Océanos</div>
+                        <div class="draggable" draggable="true">Aire</div>
+                        <div class="draggable" draggable="true">Rocas</div>
+                        <div class="draggable" draggable="true">Ríos</div>
+                        <div class="draggable" draggable="true">Nubes</div>
+                    </div>
+                    <div class="drop-zone" data-zone="litosfera">
+                        <h5>Litosfera</h5>
+                    </div>
+                    <div class="drop-zone" data-zone="hidrosfera">
+                        <h5>Hidrosfera</h5>
+                    </div>
+                    <div class="drop-zone" data-zone="atmosfera">
+                        <h5>Atmósfera</h5>
+                    </div>
+                    <div id="biosfera-feedback" class="feedback"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="biotopo" class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-mountain"></i>
+                </div>
+                <h2 class="section-title">Biotopo</h2>
+            </div>
+
+            <div class="card">
+                <h3>¿Qué es el Biotopo?</h3>
+                <p>El biotopo es el área física o geográfica específica donde habita una comunidad de organismos. Se refiere al conjunto de factores abióticos (no vivos) como el clima, el suelo, el agua, la luz, entre otros, que determinan las condiciones de vida en un ecosistema.</p>
+                <p>Los biotopos pueden clasificarse según:</p>
+                <ul>
+                    <li>Clima: tropical, templado, polar, desértico</li>
+                    <li>Ubicación: acuático (marino, dulceacuícola) o terrestre</li>
+                    <li>Vegetación dominante: bosque, pradera, desierto, tundra</li>
+                </ul>
+                <button class="btn" onclick="toggleActivity('biotopo-activity')">
+                    <i class="fas fa-play"></i> Actividad Interactiva
+                </button>
+                
+                <div id="biotopo-activity" class="activity-container">
+                    <h4>Actividad: Identifica el Biotopo</h4>
+                    <p>Relaciona cada descripción con el biotopo correspondiente:</p>
+                    <div class="matching-container">
+                        <div class="matching-column">
+                            <div class="matching-item" data-item="1">Altas temperaturas, abundante lluvia y gran diversidad de especies</div>
+                            <div class="matching-item" data-item="2">Escasa precipitación, temperaturas extremas y vegetación xerófila</div>
+                            <div class="matching-item" data-item="3">Inviernos largos y fríos, suelo permanentemente helado</div>
+                            <div class="matching-item" data-item="4">Agua salada, mareas, corrientes y presión hidrostática</div>
+                        </div>
+                        <div class="matching-column">
+                            <div class="matching-item" data-match="a">Bosque tropical</div>
+                            <div class="matching-item" data-match="b">Desierto</div>
+                            <div class="matching-item" data-match="c">Tundra</div>
+                            <div class="matching-item" data-match="d">Océano</div>
+                        </div>
+                    </div>
+                    <button class="btn" onclick="checkMatching('biotopo')">Verificar Respuestas</button>
+                    <div id="biotopo-feedback" class="feedback"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="comunidad" class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h2 class="section-title">Comunidad Biológica</h2>
+            </div>
+
+            <div class="card">
+                <h3>¿Qué es la Comunidad Biológica?</h3>
+                <p>La comunidad biológica o biocenosis es el conjunto de poblaciones de diferentes especies que interactúan entre sí en un mismo biotopo. Estas interacciones pueden ser de competencia, depredación, simbiosis, parasitismo, entre otras.</p>
+                <p>Las relaciones en una comunidad incluyen:</p>
+                <ul>
+                    <li>Relaciones tróficas (cadenas y redes alimentarias)</li>
+                    <li>Competencia por recursos</li>
+                    <li>Cooperación y mutualismo</li>
+                    <li>Parasitismo y comensalismo</li>
+                </ul>
+                <button class="btn" onclick="toggleActivity('comunidad-activity')">
+                    <i class="fas fa-play"></i> Actividad Interactiva
+                </button>
+                
+                <div id="comunidad-activity" class="activity-container">
+                    <h4>Actividad: Construye una Red Alimentaria</h4>
+                    <p>Ordena los siguientes organismos para formar una cadena alimentaria correcta:</p>
+                    <div class="drag-drop-container">
+                        <div class="draggable" draggable="true">Sol</div>
+                        <div class="draggable" draggable="true">Planta</div>
+                        <div class="draggable" draggable="true">Insecto</div>
+                        <div class="draggable" draggable="true">Pájaro</div>
+                        <div class="draggable" draggable="true">Águila</div>
+                    </div>
+                    <div class="drop-zone" data-zone="cadena">
+                        <h5>Arrastra aquí para construir la cadena alimentaria</h5>
+                    </div>
+                    <div id="comunidad-feedback" class="feedback"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="poblacion" class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h2 class="section-title">Población</h2>
+            </div>
+
+            <div class="card">
+                <h3>Características de la Población</h3>
+                <p>Una población es el conjunto de individuos de la misma especie que habitan en un área determinada y pueden reproducirse entre sí. Las poblaciones tienen características propias que permiten su estudio:</p>
+                <ul>
+                    <li><strong>Densidad:</strong> número de individuos por unidad de área o volumen</li>
+                    <li><strong>Tasa de natalidad:</strong> número de nacimientos por unidad de tiempo</li>
+                    <li><strong>Tasa de mortalidad:</strong> número de muertes por unidad de tiempo</li>
+                    <li><strong>Distribución espacial:</strong> patrón de dispersión de los individuos (agregada, uniforme o aleatoria)</li>
+                    <li><strong>Estructura etaria:</strong> proporción de individuos en diferentes grupos de edad</li>
+                </ul>
+                <button class="btn" onclick="toggleActivity('poblacion-activity')">
+                    <i class="fas fa-play"></i> Actividad Interactiva
+                </button>
+                
+                <div id="poblacion-activity" class="activity-container">
+                    <h4>Actividad: Calcula la Densidad Poblacional</h4>
+                    <p>Calcula la densidad poblacional para los siguientes escenarios:</p>
+                    <div class="scenario">
+                        <p>Escenario 1: Un bosque de 50 km² alberga a 200 ciervos.</p>
+                        <input type="number" id="densidad1" placeholder="Densidad (individuos/km²)">
+                    </div>
+                    <div class="scenario">
+                        <p>Escenario 2: Un lago de 10 km² contiene 5000 peces.</p>
+                        <input type="number" id="densidad2" placeholder="Densidad (individuos/km²)">
+                    </div>
+                    <button class="btn" onclick="checkDensity()">Verificar Respuestas</button>
+                    <div id="poblacion-feedback" class="feedback"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="crecimiento" class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-chart-area"></i>
+                </div>
+                <h2 class="section-title">Crecimiento Poblacional</h2>
+            </div>
+
+            <div class="card">
+                <h3>Estrategias de Crecimiento Poblacional</h3>
+                <p>Las especies han desarrollado diferentes estrategias reproductivas para asegurar su supervivencia:</p>
+                <ul>
+                    <li><strong>Estrategia K (seleccionadores K):</strong> pocas crías, mucho cuidado parental, longevidad, competencia intensa</li>
+                    <li><strong>Estrategia R (seleccionadores R):</strong> muchas crías, poco cuidado parental, vida corta, poca competencia</li>
+                </ul>
+                
+                <h3>Factores Limitantes</h3>
+                <p>El crecimiento poblacional está regulado por factores:</p>
+                <ul>
+                    <li><strong>Factores dependientes de la densidad:</strong> competencia, depredación, parasitismo, enfermedades</li>
+                    <li><strong>Factores independientes de la densidad:</strong> clima, desastres naturales, disponibilidad de hábitat</li>
+                </ul>
+                
+                <h3>Tipos de Crecimiento Poblacional</h3>
+                <ul>
+                    <li><strong>Crecimiento exponencial:</strong> cuando los recursos son ilimitados</li>
+                    <li><strong>Crecimiento logístico:</strong> cuando los recursos son limitados y se alcanza la capacidad de carga</li>
+                </ul>
+                
+                <button class="btn" onclick="toggleActivity('crecimiento-activity')">
+                    <i class="fas fa-play"></i> Actividad Interactiva
+                </button>
+                
+                <div id="crecimiento-activity" class="activity-container">
+                    <h4>Actividad: Identifica Estrategias Reproductivas</h4>
+                    <p>Clasifica los siguientes organismos según su estrategia reproductiva (K o R):</p>
+                    <div class="drag-drop-container">
+                        <div class="draggable" draggable="true">Elefante</div>
+                        <div class="draggable" draggable="true">Langosta</div>
+                        <div class="draggable" draggable="true">Humano</div>
+                        <div class="draggable" draggable="true">Delfín</div>
+                        <div class="draggable" draggable="true">Mosca</div>
+                        <div class="draggable" draggable="true">Tortuga marina</div>
+                    </div>
+                    <div class="drop-zone" data-zone="estrategia-k">
+                        <h5>Estrategia K</h5>
+                    </div>
+                    <div class="drop-zone" data-zone="estrategia-r">
+                        <h5>Estrategia R</h5>
+                    </div>
+                    <div id="crecimiento-feedback" class="feedback"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="quiz" class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-question-circle"></i>
+                </div>
+                <h2 class="section-title">Quiz Ecológico</h2>
+            </div>
+
+            <div class="card">
+                <h3>Pon a Prueba tus Conocimientos</h3>
+                <p>Responde las siguientes preguntas sobre los temas vistos. Tienes 10 minutos para completar el quiz.</p>
+                <button class="btn" onclick="startQuiz()">
+                    <i class="fas fa-play"></i> Iniciar Quiz
+                </button>
+                
+                <div id="quiz-container" class="quiz-container">
+                    <div class="quiz-header">
+                        <h3 class="quiz-title">Quiz Ecológico</h3>
+                        <div class="timer">
+                            <i class="fas fa-clock"></i>
+                            <span id="timer">10:00</span>
+                        </div>
+                    </div>
+                    
+                    <div id="question-container" class="question-container">
+                        <!-- Las preguntas se cargarán dinámicamente -->
+                    </div>
+                    
+                    <div class="quiz-controls">
+                        <button id="prev-btn" class="btn" onclick="previousQuestion()" disabled>
+                            <i class="fas fa-arrow-left"></i> Anterior
+                        </button>
+                        <span id="question-counter">Pregunta 1 de 20</span>
+                        <button id="next-btn" class="btn" onclick="nextQuestion()">
+                            Siguiente <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                    
+                    <div id="result-container" class="result-container">
+                        <h3 class="result-title">Resultados del Quiz</h3>
+                        <div class="result-score" id="score">0/20</div>
+                        <p id="result-message"></p>
+                        <button class="btn" onclick="restartQuiz()">
+                            <i class="fas fa-redo"></i> Reiniciar Quiz
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2023 EcoFuturo - Aprendizaje Ecológico Interactivo</p>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Generar estrellas de fondo
+        function generateStars() {
+            const starsContainer = document.getElementById('stars');
+            const starCount = 100;
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = Math.random() * 3 + 'px';
+                star.style.height = star.style.width;
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 4 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // Animación de secciones al hacer scroll
+        function animateSections() {
+            const sections = document.querySelectorAll('.section');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        }
+
+        // Función para mostrar/ocultar actividades
+        function toggleActivity(activityId) {
+            const activity = document.getElementById(activityId);
+            activity.classList.toggle('active');
+        }
+
+        // Funcionalidad de arrastrar y soltar
+        let draggedElement = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            generateStars();
+            animateSections();
+            
+            // Configurar elementos arrastrables
+            const draggables = document.querySelectorAll('.draggable');
+            const dropZones = document.querySelectorAll('.drop-zone');
+            
+            draggables.forEach(draggable => {
+                draggable.addEventListener('dragstart', (e) => {
+                    draggedElement = e.target;
+                    e.target.style.opacity = '0.5';
+                });
+                
+                draggable.addEventListener('dragend', (e) => {
+                    e.target.style.opacity = '';
+                });
+            });
+            
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    zone.classList.add('active');
+                });
+                
+                zone.addEventListener('dragleave', () => {
+                    zone.classList.remove('active');
+                });
+                
+                zone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    zone.classList.remove('active');
+                    
+                    if (draggedElement) {
+                        zone.appendChild(draggedElement);
+                        draggedElement = null;
+                        
+                        // Verificar respuestas según la actividad
+                        if (zone.dataset.zone === 'litosfera' || zone.dataset.zone === 'hidrosfera' || zone.dataset.zone === 'atmosfera') {
+                            checkBiosferaActivity();
+                        } else if (zone.dataset.zone === 'cadena') {
+                            checkComunidadActivity();
+                        } else if (zone.dataset.zone === 'estrategia-k' || zone.dataset.zone === 'estrategia-r') {
+                            checkCrecimientoActivity();
+                        }
+                    }
+                });
+            });
+            
+            // Configurar elementos de emparejamiento
+            const matchingItems = document.querySelectorAll('.matching-item');
+            let selectedItems = [];
+            
+            matchingItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    if (item.classList.contains('selected')) {
+                        item.classList.remove('selected');
+                        selectedItems = selectedItems.filter(i => i !== item);
+                    } else {
+                        item.classList.add('selected');
+                        selectedItems.push(item);
+                        
+                        if (selectedItems.length === 2) {
+                            // Verificar si es una pareja correcta
+                            const item1 = selectedItems[0];
+                            const item2 = selectedItems[1];
+                            
+                            if (
+                                (item1.dataset.item === '1' && item2.dataset.match === 'a') ||
+                                (item1.dataset.match === 'a' && item2.dataset.item === '1') ||
+                                (item1.dataset.item === '2' && item2.dataset.match === 'b') ||
+                                (item1.dataset.match === 'b' && item2.dataset.item === '2') ||
+                                (item1.dataset.item === '3' && item2.dataset.match === 'c') ||
+                                (item1.dataset.match === 'c' && item2.dataset.item === '3') ||
+                                (item1.dataset.item === '4' && item2.dataset.match === 'd') ||
+                                (item1.dataset.match === 'd' && item2.dataset.item === '4')
+                            ) {
+                                item1.style.backgroundColor = 'rgba(0, 255, 0, 0.2)';
+                                item2.style.backgroundColor = 'rgba(0, 255, 0, 0.2)';
+                                item1.style.borderColor = '#00ff00';
+                                item2.style.borderColor = '#00ff00';
+                            } else {
+                                item1.style.backgroundColor = 'rgba(255, 0, 0, 0.2)';
+                                item2.style.backgroundColor = 'rgba(255, 0, 0, 0.2)';
+                                item1.style.borderColor = '#ff0000';
+                                item2.style.borderColor = '#ff0000';
+                                
+                                setTimeout(() => {
+                                    item1.style.backgroundColor = '';
+                                    item2.style.backgroundColor = '';
+                                    item1.style.borderColor = '';
+                                    item2.style.borderColor = '';
+                                }, 1000);
+                            }
+                            
+                            item1.classList.remove('selected');
+                            item2.classList.remove('selected');
+                            selectedItems = [];
+                        }
+                    }
+                });
+            });
+        });
+
+        // Funciones para verificar actividades
+        function checkBiosferaActivity() {
+            const litosferaZone = document.querySelector('[data-zone="litosfera"]');
+            const hidrosferaZone = document.querySelector('[data-zone="hidrosfera"]');
+            const atmosferaZone = document.querySelector('[data-zone="atmosfera"]');
+            
+            const litosferaItems = Array.from(litosferaZone.querySelectorAll('.draggable')).map(item => item.textContent);
+            const hidrosferaItems = Array.from(hidrosferaZone.querySelectorAll('.draggable')).map(item => item.textContent);
+            const atmosferaItems = Array.from(atmosferaZone.querySelectorAll('.draggable')).map(item => item.textContent);
+            
+            const feedback = document.getElementById('biosfera-feedback');
+            
+            if (
+                litosferaItems.includes('Suelo') && litosferaItems.includes('Rocas') &&
+                hidrosferaItems.includes('Océanos') && hidrosferaItems.includes('Ríos') &&
+                atmosferaItems.includes('Aire') && atmosferaItems.includes('Nubes')
+            ) {
+                feedback.className = 'feedback correct';
+                feedback.textContent = '¡Excelente! Has clasificado correctamente los componentes de la biosfera.';
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.textContent = 'Inténtalo de nuevo. Revisa la clasificación de los componentes.';
+            }
+        }
+
+        function checkComunidadActivity() {
+            const cadenaZone = document.querySelector('[data-zone="cadena"]');
+            const cadenaItems = Array.from(cadenaZone.querySelectorAll('.draggable')).map(item => item.textContent);
+            
+            const feedback = document.getElementById('comunidad-feedback');
+            
+            if (
+                cadenaItems[0] === 'Sol' &&
+                cadenaItems[1] === 'Planta' &&
+                cadenaItems[2] === 'Insecto' &&
+                cadenaItems[3] === 'Pájaro' &&
+                cadenaItems[4] === 'Águila'
+            ) {
+                feedback.className = 'feedback correct';
+                feedback.textContent = '¡Perfecto! Has construido correctamente la cadena alimentaria.';
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.textContent = 'Revisa el orden de la cadena alimentaria. Recuerda que la energía fluye del sol a los productores y luego a los consumidores.';
+            }
+        }
+
+        function checkCrecimientoActivity() {
+            const estrategiaKZone = document.querySelector('[data-zone="estrategia-k"]');
+            const estrategiaRZone = document.querySelector('[data-zone="estrategia-r"]');
+            
+            const estrategiaKItems = Array.from(estrategiaKZone.querySelectorAll('.draggable')).map(item => item.textContent);
+            const estrategiaRItems = Array.from(estrategiaRZone.querySelectorAll('.draggable')).map(item => item.textContent);
+            
+            const feedback = document.getElementById('crecimiento-feedback');
+            
+            if (
+                estrategiaKItems.includes('Elefante') && 
+                estrategiaKItems.includes('Humano') && 
+                estrategiaKItems.includes('Delfín') &&
+                estrategiaRItems.includes('Langosta') && 
+                estrategiaRItems.includes('Mosca') && 
+                estrategiaRItems.includes('Tortuga marina')
+            ) {
+                feedback.className = 'feedback correct';
+                feedback.textContent = '¡Excelente! Has clasificado correctamente las estrategias reproductivas.';
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.textContent = 'Revisa tu clasificación. Los organismos con estrategia K tienen pocas crías y mucho cuidado parental, mientras que los de estrategia R tienen muchas crías y poco cuidado parental.';
+            }
+        }
+
+        function checkDensity() {
+            const densidad1 = document.getElementById('densidad1').value;
+            const densidad2 = document.getElementById('densidad2').value;
+            
+            const feedback = document.getElementById('poblacion-feedback');
+            
+            if (densidad1 == 4 && densidad2 == 500) {
+                feedback.className = 'feedback correct';
+                feedback.textContent = '¡Correcto! La densidad del primer escenario es 4 individuos/km² y la del segundo es 500 individuos/km².';
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.textContent = 'Revisa tus cálculos. Recuerda que la densidad = número de individuos / área.';
+            }
+        }
+
+        // Quiz functionality
+        const quizQuestions = [
+            {
+                question: "¿Cuál es la definición correcta de biosfera?",
+                options: [
+                    "El conjunto de todos los ecosistemas de la Tierra",
+                    "Solo los océanos y mares del planeta",
+                    "La capa de aire que rodea la Tierra",
+                    "El conjunto de seres vivos en un área determinada"
+                ],
+                answer: 0
+            },
+            {
+                question: "¿Qué tipo de factores no dependen de la densidad poblacional?",
+                options: [
+                    "Competencia por recursos",
+                    "Depredación",
+                    "Clima",
+                    "Enfermedades"
+                ],
+                answer: 2
+            },
+            {
+                question: "Los organismos con estrategia reproductiva K se caracterizan por:",
+                options: [
+                    "Tener muchas crías con poco cuidado parental",
+                    "Tener pocas crías con mucho cuidado parental",
+                    "Reproducirse rápidamente en ambientes inestables",
+                    "Tener una vida corta y alta tasa de mortalidad"
+                ],
+                answer: 1
+            },
+            {
+                question: "¿Qué representa la capacidad de carga de un ecosistema?",
+                options: [
+                    "El número máximo de individuos que puede sostener",
+                    "La tasa de natalidad máxima",
+                    "La cantidad de recursos disponibles",
+                    "El tamaño del territorio"
+                ],
+                answer: 0
+            },
+            {
+                question: "En una cadena alimentaria, los productores primarios son:",
+                options: [
+                    "Los herbívoros",
+                    "Los carnívoros",
+                    "Las plantas",
+                    "Los descomponedores"
+                ],
+                answer: 2
+            },
+            {
+                question: "¿Cuál de los siguientes es un ejemplo de biotopo?",
+                options: [
+                    "Un bosque de coníferes",
+                    "Una manada de lobos",
+                    "Una colonia de hormigas",
+                    "Una comunidad de peces"
+                ],
+                answer: 0
+            },
+            {
+                question: "El crecimiento poblacional exponencial ocurre cuando:",
+                options: [
+                    "Los recursos son limitados",
+                    "Hay factores limitantes",
+                    "Los recursos son ilimitados",
+                    "La tasa de mortalidad es alta"
+                ],
+                answer: 2
+            },
+            {
+                question: "¿Qué tipo de relación describe el mutualismo?",
+                options: [
+                    "Ambas especies se benefician",
+                    "Una especie se beneficia y la otra no se ve afectada",
+                    "Una especie se beneficia a expensas de la otra",
+                    "Ambas especies se perjudican"
+                ],
+                answer: 0
+            },
+            {
+                question: "La distribución espacial de una población puede ser:",
+                options: [
+                    "Solo agregada",
+                    "Agregada, uniforme o aleatoria",
+                    "Solo uniforme",
+                    "Solo aleatoria"
+                ],
+                answer: 1
+            },
+            {
+                question: "¿Qué componente no pertenece al biotopo?",
+                options: [
+                    "El suelo",
+                    "El agua",
+                    "Los animales",
+                    "El clima"
+                ],
+                answer: 2
+            },
+            {
+                question: "La sucesión ecológica es:",
+                options: [
+                    "El cambio en la composición de especies a lo largo del tiempo",
+                    "La migración de animales",
+                    "La extinción de especies",
+                    "La competencia por recursos"
+                ],
+                answer: 0
+            },
+            {
+                question: "Los factores abióticos de un ecosistema incluyen:",
+                options: [
+                    "Plantas y animales",
+                    "Suelo, agua y clima",
+                    "Solo los depredadores",
+                    "Solo las presas"
+                ],
+                answer: 1
+            },
+            {
+                question: "¿Qué representa la tasa de natalidad en una población?",
+                options: [
+                    "El número de muertes por unidad de tiempo",
+                    "El número de nacimientos por unidad de tiempo",
+                    "El número de individuos que migran",
+                    "El número de individuos totales"
+                ],
+                answer: 1
+            },
+            {
+                question: "En una pirámide de población, una base ancha indica:",
+                options: [
+                    "Muchos individuos jóvenes",
+                    "Muchos individuos ancianos",
+                    "Pocos individuos jóvenes",
+                    "Población estable"
+                ],
+                answer: 0
+            },
+            {
+                question: "¿Qué tipo de organismo ocupa el nivel trófico más alto en una cadena alimentaria?",
+                options: [
+                    "Productor primario",
+                    "Consumidor primario",
+                    "Consumidor secundario",
+                    "Depredador tope"
+                ],
+                answer: 3
+            },
+            {
+                question: "El efecto invernadero es causado principalmente por:",
+                options: [
+                    "La deforestación",
+                    "La acumulación de gases en la atmósfera",
+                    "La contaminación del agua",
+                    "La sobreexplotación de recursos"
+                ],
+                answer: 1
+            },
+            {
+                question: "¿Qué es una nicho ecológico?",
+                options: [
+                    "El lugar físico donde vive un organismo",
+                    "El rol que desempeña un organismo en su ecosistema",
+                    "La cantidad de individuos de una especie",
+                    "La relación entre depredador y presa"
+                ],
+                answer: 1
+            },
+            {
+                question: "La biodiversidad se refiere a:",
+                options: [
+                    "Solo el número de especies en un área",
+                    "La variedad de vida en todos sus niveles",
+                    "Solo la variedad genética dentro de una especie",
+                    "Solo la variedad de ecosistemas"
+                ],
+                answer: 1
+            },
+            {
+                question: "¿Qué tipo de relación describe el parasitismo?",
+                options: [
+                    "Ambas especies se benefician",
+                    "Una especie se beneficia y la otra no se ve afectada",
+                    "Una especie se beneficia a expensas de la otra",
+                    "Ambas especies se perjudican"
+                ],
+                answer: 2
+            },
+            {
+                question: "El modelo de crecimiento logístico de una población:",
+                options: [
+                    "Siempre aumenta exponencialmente",
+                    "Se estabiliza al alcanzar la capacidad de carga",
+                    "Disminuye constantemente",
+                    "No tiene límite de crecimiento"
+                ],
+                answer: 1
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let timer;
+        let timeLeft = 600; // 10 minutos en segundos
+        let quizStarted = false;
+        let quizEnded = false;
+        let userAnswers = [];
+
+        function startQuiz() {
+            document.getElementById('quiz-container').classList.add('active');
+            quizStarted = true;
+            quizEnded = false;
+            currentQuestion = 0;
+            score = 0;
+            timeLeft = 600;
+            userAnswers = [];
+            
+            displayQuestion();
+            startTimer();
+            
+            document.getElementById('prev-btn').disabled = true;
+            document.getElementById('next-btn').disabled = false;
+            document.getElementById('result-container').classList.remove('active');
+        }
+
+        function displayQuestion() {
+            const questionContainer = document.getElementById('question-container');
+            const question = quizQuestions[currentQuestion];
+            
+            let questionHTML = `<div class="question">${currentQuestion + 1}. ${question.question}</div>`;
+            questionHTML += '<div class="options">';
+            
+            question.options.forEach((option, index) => {
+                const isSelected = userAnswers[currentQuestion] === index;
+                questionHTML += `<div class="option ${isSelected ? 'selected' : ''}" onclick="selectOption(${index})">${option}</div>`;
+            });
+            
+            questionHTML += '</div>';
+            
+            questionContainer.innerHTML = questionHTML;
+            document.getElementById('question-counter').textContent = `Pregunta ${currentQuestion + 1} de ${quizQuestions.length}`;
+            
+            // Deshabilitar botones de navegación según la pregunta actual
+            document.getElementById('prev-btn').disabled = currentQuestion === 0;
+            document.getElementById('next-btn').disabled = currentQuestion === quizQuestions.length - 1;
+        }
+
+        function selectOption(index) {
+            userAnswers[currentQuestion] = index;
+            
+            // Actualizar la interfaz para mostrar la opción seleccionada
+            const options = document.querySelectorAll('.option');
+            options.forEach((option, i) => {
+                option.classList.remove('selected');
+                if (i === index) {
+                    option.classList.add('selected');
+                }
+            });
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < quizQuestions.length - 1) {
+                currentQuestion++;
+                displayQuestion();
+            } else {
+                endQuiz();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                displayQuestion();
+            }
+        }
+
+        function startTimer() {
+            timer = setInterval(() => {
+                timeLeft--;
+                
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                
+                document.getElementById('timer').textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    endQuiz();
+                }
+            }, 1000);
+        }
+
+        function endQuiz() {
+            clearInterval(timer);
+            quizEnded = true;
+            
+            // Calcular puntuación
+            for (let i = 0; i < quizQuestions.length; i++) {
+                if (userAnswers[i] === quizQuestions[i].answer) {
+                    score++;
+                }
+            }
+            
+            // Mostrar resultados
+            document.getElementById('question-container').style.display = 'none';
+            document.getElementById('quiz-controls').style.display = 'none';
+            document.getElementById('result-container').classList.add('active');
+            document.getElementById('score').textContent = `${score}/${quizQuestions.length}`;
+            
+            let message = '';
+            const percentage = (score / quizQuestions.length) * 100;
+            
+            if (percentage >= 90) {
+                message = '¡Excelente! Tienes un conocimiento sobresaliente sobre ecología.';
+            } else if (percentage >= 70) {
+                message = '¡Muy bien! Tienes un buen conocimiento sobre los temas ecológicos.';
+            } else if (percentage >= 50) {
+                message = 'Bien. Hay algunos conceptos que podrías repasar.';
+            } else {
+                message = 'Necesitas estudiar más sobre estos temas. ¡No te rindas!';
+            }
+            
+            document.getElementById('result-message').textContent = message;
+        }
+
+        function restartQuiz() {
+            document.getElementById('question-container').style.display = 'block';
+            document.getElementById('quiz-controls').style.display = 'flex';
+            document.getElementById('result-container').classList.remove('active');
+            
+            startQuiz();
+        }
+    </script>
+</body>
+</html>
